@@ -512,7 +512,7 @@ body::after{
       <p class="body" style="max-width:none;text-align:center;">
         And yes — today<br/>
         <span class="her-name">Janviiii</span>
-        is officially Bubu 🐻💞
+        is Bubu 🐻💞
       </p>
     </div>
 
@@ -726,16 +726,38 @@ document.getElementById('enter-btn').addEventListener('click',()=>{
 /* ══════════════════════════════════════════
    MUSIC
 ══════════════════════════════════════════ */
-function fadeInMusic(){
-  if(musicOn) return;
-  bgm.volume=0;bgm.play().catch(()=>{});musicOn=true;
-  let v=0;const t=setInterval(()=>{
-    v=Math.min(v+.014,.4);bgm.volume=v;if(v>=.4)clearInterval(t);
-  },90);
+const bgm = document.getElementById('bgm');
+const popSnd = document.getElementById('pop');
+const musicBtn = document.getElementById('music-btn');
+let musicOn = false;
+let cur = 0;
+const SCREENS = ['s-entry','s-intro','s-emotion','s-cake','s-message','s-final'];
+
+function fadeInMusic() {
+  if (musicOn) return;
+  bgm.volume = 0;
+  bgm.play().then(() => {
+    musicOn = true;
+    musicBtn.classList.add('show');
+    let v = 0;
+    const t = setInterval(() => {
+      v = Math.min(v + 0.015, 0.45);
+      bgm.volume = v;
+      if (v >= 0.45) clearInterval(t);
+    }, 100);
+  }).catch(() => {
+    console.log("Waiting for user interaction...");
+  });
 }
-musicBtn.addEventListener('click',()=>{
-  muted=!muted;bgm.muted=muted;
-  musicBtn.textContent=muted?'🔇':'🎵';
+
+musicBtn.addEventListener('click', () => {
+  if (bgm.muted) {
+    bgm.muted = false;
+    musicBtn.textContent = '🎵';
+  } else {
+    bgm.muted = true;
+    musicBtn.textContent = '🔇';
+  }
 });
 
 /* ══════════════════════════════════════════
